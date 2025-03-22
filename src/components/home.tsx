@@ -3,11 +3,13 @@ import TimetableHeader from "./TimetableHeader";
 import SearchTabs from "./SearchTabs";
 import SearchResults from "./SearchResults";
 
+import { Button } from "@/components/ui/button";
+
 interface SearchResultItem {
   department: string;
   subject: string;
   staffName: string;
-  periodStatus: "assigned" | "free" | "unassigned";
+  status: "assigned" | "free" | "unassigned";
 }
 
 const Home = () => {
@@ -16,27 +18,7 @@ const Home = () => {
   const [searchType, setSearchType] = useState<"staff" | "student">("staff");
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
-  // Mock data for dropdowns
-  const staffList = [
-    "John Smith",
-    "Jane Doe",
-    "Robert Johnson",
-    "Emily Williams",
-    "Michael Brown",
-    "Sarah Davis",
-    "David Wilson",
-  ];
-
-  const departmentList = [
-    { id: "cs", name: "Computer Science" },
-    { id: "math", name: "Mathematics" },
-    { id: "eng", name: "Engineering" },
-    { id: "sci", name: "Science" },
-    { id: "arts", name: "Arts & Humanities" },
-    { id: "bus", name: "Business" },
-    { id: "lang", name: "Languages" },
-  ];
-
+  // Days and periods lists
   const daysList = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
 
   const periodsList = [
@@ -47,6 +29,7 @@ const Home = () => {
     "Period 5",
     "Period 6",
     "Period 7",
+    "Period 8",
   ];
 
   const handleSearchResults = (
@@ -58,7 +41,7 @@ const Home = () => {
       department: result.department || "",
       subject: result.subject || "",
       staffName: result.staffName || "",
-      periodStatus: result.status || "unassigned",
+      status: result.status || "unassigned",
     }));
 
     setSearchResults(transformedResults);
@@ -78,14 +61,9 @@ const Home = () => {
           <SearchTabs
             onSearchResults={(results) => {
               setIsLoading(true);
-              // Simulate API delay
-              setTimeout(() => {
-                handleSearchResults(results);
-                setIsLoading(false);
-              }, 500);
+              handleSearchResults(results);
+              setIsLoading(false);
             }}
-            staffList={staffList}
-            departmentList={departmentList}
             daysList={daysList}
             periodsList={periodsList}
           />

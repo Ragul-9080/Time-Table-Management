@@ -40,17 +40,13 @@ interface StaffSearchFormProps {
   staffList?: string[];
   daysList?: string[];
   periodsList?: string[];
+  isLoading?: boolean;
 }
 
 const StaffSearchForm = ({
   onSearch = () => {},
-  staffList = [
-    "John Smith",
-    "Jane Doe",
-    "Robert Johnson",
-    "Emily Williams",
-    "Michael Brown",
-  ],
+  staffList = [],
+
   daysList = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
   periodsList = [
     "Period 1",
@@ -59,10 +55,11 @@ const StaffSearchForm = ({
     "Period 4",
     "Period 5",
     "Period 6",
+    "Period 7",
+    "Period 8",
   ],
+  isLoading = false,
 }: StaffSearchFormProps) => {
-  const [isSearching, setIsSearching] = useState(false);
-
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -73,12 +70,7 @@ const StaffSearchForm = ({
   });
 
   const handleSubmit = (values: FormValues) => {
-    setIsSearching(true);
-    // Simulate API call
-    setTimeout(() => {
-      onSearch(values);
-      setIsSearching(false);
-    }, 500);
+    onSearch(values);
   };
 
   return (
@@ -174,9 +166,9 @@ const StaffSearchForm = ({
           <Button
             type="submit"
             className="w-full md:w-auto"
-            disabled={isSearching}
+            disabled={isLoading}
           >
-            {isSearching ? (
+            {isLoading ? (
               <span className="flex items-center gap-2">
                 <div className="h-4 w-4 animate-spin rounded-full border-2 border-white border-t-transparent"></div>
                 Searching...

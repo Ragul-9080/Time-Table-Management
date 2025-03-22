@@ -7,7 +7,7 @@ interface SearchResultItem {
   department: string;
   subject: string;
   staffName: string;
-  periodStatus: "assigned" | "free" | "unassigned";
+  status: "assigned" | "free" | "unassigned";
 }
 
 interface SearchResultsProps {
@@ -26,22 +26,22 @@ const SearchResults = ({
   // Mock data for demonstration when no results are provided
   const defaultResults: SearchResultItem[] = [
     {
-      department: "Mathematics",
-      subject: "Calculus",
-      staffName: "Dr. Smith",
-      periodStatus: "assigned",
+      department: "BCA",
+      subject: "DBMS",
+      staffName: "Mr. C. Santhosh Kumar",
+      status: "assigned",
     },
     {
-      department: "Science",
-      subject: "",
-      staffName: "Prof. Johnson",
-      periodStatus: "free",
+      department: "BSc.AI&DS",
+      subject: "AI Fundamentals",
+      staffName: "IBM Trainer",
+      status: "assigned",
     },
     {
-      department: "English",
+      department: "Computer Science",
       subject: "",
       staffName: "",
-      periodStatus: "unassigned",
+      status: "unassigned",
     },
   ];
 
@@ -112,7 +112,7 @@ const SearchResults = ({
                   <td className="p-3">
                     {item.subject || (
                       <span className="text-gray-400 italic">
-                        {item.periodStatus === "free"
+                        {item.status === "free"
                           ? "Free Period"
                           : "No Subject Assigned"}
                       </span>
@@ -127,16 +127,16 @@ const SearchResults = ({
                     <Badge
                       className={cn(
                         "px-2 py-1",
-                        item.periodStatus === "assigned"
+                        item.status === "assigned"
                           ? "bg-green-100 text-green-800 hover:bg-green-100"
-                          : item.periodStatus === "free"
+                          : item.status === "free"
                             ? "bg-blue-100 text-blue-800 hover:bg-blue-100"
                             : "bg-amber-100 text-amber-800 hover:bg-amber-100",
                       )}
                     >
-                      {item.periodStatus === "assigned"
+                      {item.status === "assigned"
                         ? "Assigned Class"
-                        : item.periodStatus === "free"
+                        : item.status === "free"
                           ? "Free Period"
                           : "Unassigned Class"}
                     </Badge>

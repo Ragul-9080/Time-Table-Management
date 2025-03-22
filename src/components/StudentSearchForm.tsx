@@ -38,14 +38,34 @@ type FormValues = z.infer<typeof formSchema>;
 interface StudentSearchFormProps {
   onSearch?: (values: FormValues) => void;
   isLoading?: boolean;
+  departments?: { id: string; name: string }[];
+  days?: { id: string; name: string }[];
+  periods?: { id: string; name: string }[];
 }
 
 const StudentSearchForm = ({
   onSearch = () => {},
   isLoading = false,
-}: StudentSearchFormProps) => {
-  const [submitted, setSubmitted] = useState(false);
+  departments = [],
 
+  days = [
+    { id: "mon", name: "Monday" },
+    { id: "tue", name: "Tuesday" },
+    { id: "wed", name: "Wednesday" },
+    { id: "thu", name: "Thursday" },
+    { id: "fri", name: "Friday" },
+  ],
+  periods = [
+    { id: "1", name: "Period 1" },
+    { id: "2", name: "Period 2" },
+    { id: "3", name: "Period 3" },
+    { id: "4", name: "Period 4" },
+    { id: "5", name: "Period 5" },
+    { id: "6", name: "Period 6" },
+    { id: "7", name: "Period 7" },
+    { id: "8", name: "Period 8" },
+  ],
+}: StudentSearchFormProps) => {
   const form = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -56,35 +76,8 @@ const StudentSearchForm = ({
   });
 
   const onSubmit = (values: FormValues) => {
-    setSubmitted(true);
     onSearch(values);
   };
-
-  // Mock data for dropdowns
-  const departments = [
-    { id: "cs", name: "Computer Science" },
-    { id: "math", name: "Mathematics" },
-    { id: "eng", name: "Engineering" },
-    { id: "sci", name: "Science" },
-    { id: "arts", name: "Arts & Humanities" },
-  ];
-
-  const days = [
-    { id: "mon", name: "Monday" },
-    { id: "tue", name: "Tuesday" },
-    { id: "wed", name: "Wednesday" },
-    { id: "thu", name: "Thursday" },
-    { id: "fri", name: "Friday" },
-  ];
-
-  const periods = [
-    { id: "1", name: "Period 1" },
-    { id: "2", name: "Period 2" },
-    { id: "3", name: "Period 3" },
-    { id: "4", name: "Period 4" },
-    { id: "5", name: "Period 5" },
-    { id: "6", name: "Period 6" },
-  ];
 
   return (
     <div className="w-full p-6 bg-white rounded-lg shadow-sm">
@@ -216,14 +209,6 @@ const StudentSearchForm = ({
           </div>
         </form>
       </Form>
-
-      {submitted && !isLoading && (
-        <div className="mt-4 p-4 bg-gray-50 rounded-md">
-          <p className="text-sm text-gray-500">
-            Search completed. View results below.
-          </p>
-        </div>
-      )}
     </div>
   );
 };
