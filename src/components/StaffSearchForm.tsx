@@ -47,7 +47,14 @@ const StaffSearchForm = ({
   onSearch = () => {},
   staffList = [],
 
-  daysList = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+  daysList = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ],
   periodsList = [
     "Period 1",
     "Period 2",

@@ -5,13 +5,12 @@ export const supabaseDb = {
   // Get all departments
   getDepartments: async () => {
     const departments = [
-      { id: "bca", name: "BCA" },
-      { id: "bsc_ai_ds", name: "BSc.AI&DS" },
-      { id: "cs", name: "Computer Science" },
-      { id: "math", name: "Mathematics" },
-      { id: "eng", name: "Engineering" },
-      { id: "sci", name: "Science" },
-      { id: "arts", name: "Arts & Humanities" },
+      { id: "bca_i", name: "BCA - I" },
+      { id: "bca_ii", name: "BCA - II" },
+      { id: "bsc_ai_ds_i", name: "Bsc AI&DS - I" },
+      { id: "bsc_ai_ds_ii", name: "Bsc AI&DS - II" },
+      { id: "mca_i", name: "MCA - I" },
+      { id: "mca_ii", name: "MCA - II" },
     ];
     return departments;
   },
@@ -21,36 +20,40 @@ export const supabaseDb = {
     const supabase = getSupabaseClient();
 
     try {
-      // Get unique staff names from all department tables
-      const { data: bcaStaff, error: bcaError } = await supabase
-        .from("bca")
-        .select("staff_name")
-        .not("staff_name", "is", null);
-
-      if (bcaError) throw bcaError;
-
       // Create a Set to store unique staff names
       const uniqueStaffNames = new Set<string>();
 
-      // Add staff names from BCA table
-      bcaStaff.forEach((item) => {
-        if (item.staff_name) uniqueStaffNames.add(item.staff_name);
-      });
+      // Array of all department tables
+      const tables = [
+        "bca-i",
+        "bca-ii",
+        "bsc_ai_ds-i",
+        "bsc_ai_ds-ii",
+        "mca-i",
+        "mca-ii",
+      ];
 
-      // Try to get staff from other tables too
-      try {
-        const { data: bscData } = await supabase
-          .from("bsc_ai_ds")
-          .select("staff_name")
-          .not("staff_name", "is", null);
+      // Query each table for staff names
+      for (const table of tables) {
+        try {
+          const { data, error } = await supabase
+            .from(table)
+            .select("staff_name")
+            .not("staff_name", "is", null);
 
-        if (bscData) {
-          bscData.forEach((item) => {
-            if (item.staff_name) uniqueStaffNames.add(item.staff_name);
-          });
+          if (error) {
+            console.log(`Error fetching from ${table}:`, error);
+            continue;
+          }
+
+          if (data) {
+            data.forEach((item) => {
+              if (item.staff_name) uniqueStaffNames.add(item.staff_name);
+            });
+          }
+        } catch (e) {
+          console.log(`No ${table} table or error fetching from it`, e);
         }
-      } catch (e) {
-        console.log("No bsc_ai_ds table or error fetching from it", e);
       }
 
       // Convert Set to array of objects with id and name
@@ -64,11 +67,23 @@ export const supabaseDb = {
       console.error("Error fetching staff:", error);
       // Return default staff list if there's an error
       return [
-        { id: "mr-s-santhosh-kumar", name: "Mr. S. Santhosh Kumar" },
-        { id: "dr-evangeline", name: "Dr. Evangeline" },
-        { id: "mr-s-parusvanathan", name: "Mr. S. Parusvanathan" },
-        { id: "mr-c-santhosh-kumar", name: "Mr. C. Santhosh Kumar" },
+        { id: "dr-n-p-damodaran", name: "Dr. N.P. Damodaran, AP/Maths" },
+        { id: "dr-prathiba", name: "Dr. Prathiba" },
+        { id: "dr-t-vijayakumar", name: "Dr. T. Vijayakumar" },
         { id: "mr-a-aswin", name: "Mr. A. Aswin" },
+        { id: "mr-b-balaji", name: "Mr. B. Balaji" },
+        { id: "mr-c-santhosh-kumar", name: "Mr. C. Santhosh Kumar" },
+        { id: "mr-r-bharathidasan", name: "Mr. R. Bharathidasan" },
+        { id: "mr-rogen-judie", name: "Mr. Rogen Judie" },
+        { id: "mr-s-parsuvanathan", name: "Mr. S. Parsuvanathan" },
+        { id: "mr-s-santhosh-kumar", name: "Mr. S. Santhosh Kumar" },
+        { id: "mrs-k-hemavathi", name: "Mrs. K. Hemavathi" },
+        { id: "mrs-k-latha", name: "Mrs. K. Latha" },
+        { id: "mrs-r-saranya", name: "Mrs. R. Saranya" },
+        { id: "ms-p-kalaiselvi", name: "Ms. P. Kalaiselvi" },
+        { id: "ms-priyadharshini", name: "Ms. Priyadharshini" },
+        { id: "ms-t-mahakaviyarasi", name: "Ms. T. Mahakaviyarasi" },
+        { id: "ibm-trainer", name: "IBM Trainer" },
         { id: "xebia-trainer", name: "Xebia Trainer" },
       ];
     }
@@ -90,54 +105,71 @@ export const supabaseDb = {
         wed: "Wednesday",
         thu: "Thursday",
         fri: "Friday",
+        sat: "Saturday",
       };
 
       const formattedDay = dayMap[day] || day;
       const periodNumber = parseInt(period);
 
-      // Search in BCA table
-      const { data: bcaData, error: bcaError } = await supabase
-        .from("bca")
-        .select("*")
-        .eq("staff_name", staffName)
-        .eq("day", formattedDay)
-        .eq("period", periodNumber);
+      // Array of all department tables
+      const tables = [
+        "bca-i",
+        "bca-ii",
+        "bsc_ai_ds-i",
+        "bsc_ai_ds-ii",
+        "mca-i",
+        "mca-ii",
+      ];
 
-      if (bcaError) throw bcaError;
+      // Map table names to department display names
+      const tableToDisplayName: Record<string, string> = {
+        "bca-i": "BCA - I",
+        "bca-ii": "BCA - II",
+        "bsc_ai_ds-i": "Bsc AI&DS - I",
+        "bsc_ai_ds-ii": "Bsc AI&DS - II",
+        "mca-i": "MCA - I",
+        "mca-ii": "MCA - II",
+      };
 
-      // Search in BSc.AI&DS table
-      const { data: bscData, error: bscError } = await supabase
-        .from("bsc_ai_ds")
-        .select("*")
-        .eq("staff_name", staffName)
-        .eq("day", formattedDay)
-        .eq("period", periodNumber);
+      // Store all results
+      const allResults: SearchResult[] = [];
 
-      if (bscError) throw bscError;
+      // Query each table for the staff schedule
+      for (const table of tables) {
+        try {
+          const { data, error } = await supabase
+            .from(table)
+            .select("*")
+            .eq("staff_name", staffName)
+            .eq("day", formattedDay)
+            .eq("period", periodNumber);
 
-      // Combine and transform results
-      const bcaResults = (bcaData || []).map((item) => ({
-        department: "BCA",
-        subject: item.subject || "",
-        staffName: item.staff_name || "",
-        status: item.staff_name
-          ? "assigned"
-          : ("unassigned" as "assigned" | "free" | "unassigned"),
-      }));
+          if (error) {
+            console.log(`Error fetching from ${table}:`, error);
+            continue;
+          }
 
-      const bscResults = (bscData || []).map((item) => ({
-        department: "BSc.AI&DS",
-        subject: item.subject || "",
-        staffName: item.staff_name || "",
-        status: item.staff_name
-          ? "assigned"
-          : ("unassigned" as "assigned" | "free" | "unassigned"),
-      }));
+          if (data && data.length > 0) {
+            // Transform results for this table
+            const tableResults = data.map((item) => ({
+              department: tableToDisplayName[table] || table,
+              subject: item.subject || "",
+              staffName: item.staff_name || "",
+              status: item.staff_name
+                ? "assigned"
+                : ("unassigned" as "assigned" | "free" | "unassigned"),
+            }));
 
-      const combinedResults = [...bcaResults, ...bscResults];
+            // Add to all results
+            allResults.push(...tableResults);
+          }
+        } catch (e) {
+          console.log(`Error querying ${table}:`, e);
+        }
+      }
 
       // If no results found, return a "free period" result
-      if (combinedResults.length === 0) {
+      if (allResults.length === 0) {
         return [
           {
             department: "",
@@ -148,7 +180,7 @@ export const supabaseDb = {
         ];
       }
 
-      return combinedResults;
+      return allResults;
     } catch (error) {
       console.error("Error searching by staff:", error);
       throw error;
@@ -171,6 +203,7 @@ export const supabaseDb = {
         wed: "Wednesday",
         thu: "Thursday",
         fri: "Friday",
+        sat: "Saturday",
       };
 
       const formattedDay = dayMap[day] || day;
@@ -181,38 +214,33 @@ export const supabaseDb = {
       let departmentName: string;
 
       switch (departmentId) {
-        case "bca":
-          tableName = "bca";
-          departmentName = "BCA";
+        case "bca_i":
+          tableName = "bca-i";
+          departmentName = "BCA - I";
           break;
-        case "bsc-ai-ds":
-        case "bsc_ai_ds":
-          tableName = "bsc_ai_ds";
-          departmentName = "BSc.AI&DS";
+        case "bca_ii":
+          tableName = "bca-ii";
+          departmentName = "BCA - II";
           break;
-        case "cs":
-          tableName = "cs";
-          departmentName = "Computer Science";
+        case "bsc_ai_ds_i":
+          tableName = "bsc_ai_ds-i";
+          departmentName = "Bsc AI&DS - I";
           break;
-        case "math":
-          tableName = "math";
-          departmentName = "Mathematics";
+        case "bsc_ai_ds_ii":
+          tableName = "bsc_ai_ds-ii";
+          departmentName = "Bsc AI&DS - II";
           break;
-        case "eng":
-          tableName = "eng";
-          departmentName = "Engineering";
+        case "mca_i":
+          tableName = "mca-i";
+          departmentName = "MCA - I";
           break;
-        case "sci":
-          tableName = "sci";
-          departmentName = "Science";
-          break;
-        case "arts":
-          tableName = "arts";
-          departmentName = "Arts & Humanities";
+        case "mca_ii":
+          tableName = "mca-ii";
+          departmentName = "MCA - II";
           break;
         default:
-          tableName = "bca";
-          departmentName = "BCA";
+          tableName = "bca-i";
+          departmentName = "BCA - I";
       }
 
       // Query the appropriate table

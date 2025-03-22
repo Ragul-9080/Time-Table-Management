@@ -25,7 +25,14 @@ const SearchTabs = ({
   onSearchResults = () => {},
   staffList = [],
   departmentList = [],
-  daysList = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"],
+  daysList = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ],
   periodsList = [
     "Period 1",
     "Period 2",
@@ -49,6 +56,7 @@ const SearchTabs = ({
     Wednesday: "wed",
     Thursday: "thu",
     Friday: "fri",
+    Saturday: "sat",
   };
 
   // Map period names to database period codes
@@ -241,6 +249,7 @@ const SearchTabs = ({
     { id: "wed", name: "Wednesday" },
     { id: "thu", name: "Thursday" },
     { id: "fri", name: "Friday" },
+    { id: "sat", name: "Saturday" },
   ];
 
   // Map periods to format expected by StudentSearchForm

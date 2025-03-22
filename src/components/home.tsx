@@ -19,7 +19,14 @@ const Home = () => {
   const [hasSearched, setHasSearched] = useState<boolean>(false);
 
   // Days and periods lists
-  const daysList = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday"];
+  const daysList = [
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
 
   const periodsList = [
     "Period 1",
